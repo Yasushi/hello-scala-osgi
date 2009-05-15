@@ -11,6 +11,7 @@ import java.util.Hashtable
 class HelloScalaHttpActivator extends BundleActivator {
 
     var httpServiceRef:ServiceReference = _
+    var tracker:Track[HttpService] = _
 
     private def registerServlets(httpService:HttpService) {
       val httpContext = httpService.createDefaultHttpContext()
@@ -29,7 +30,7 @@ class HelloScalaHttpActivator extends BundleActivator {
     }
  
     def start(context: BundleContext) {
-        context track classOf[HttpService] on {
+        tracker = context track classOf[HttpService] on {
           case Adding(service, _) => registerServlets(service)
           case Modified(service, _) =>
           case Removed(service, _) =>
@@ -38,6 +39,7 @@ class HelloScalaHttpActivator extends BundleActivator {
     }
    
     def stop(context: BundleContext) {
+        tracker.stop()
         Console.println("STOPPED com.domain.osgi.scala")
     }
 }
