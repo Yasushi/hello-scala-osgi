@@ -5,8 +5,7 @@ import org.osgi.service.http._
 
 import org.scalamodules.core.RichBundleContext.toRichBundleContext
 import org.scalamodules.core._
-
-import java.util.Hashtable
+import org.scalamodules.util.jcl.Conversions._
 
 class HelloScalaHttpActivator extends BundleActivator {
 
@@ -15,8 +14,7 @@ class HelloScalaHttpActivator extends BundleActivator {
 
     private def registerServlets(httpService:HttpService) {
       val httpContext = httpService.createDefaultHttpContext()
-      val initParams = new Hashtable[String, String]()
-      initParams.put("from", "HttpService")
+      val initParams = mapToJavaDictionary(Map("from"->"HttpService"))
       httpService.registerServlet("/helloworld/hs",
                   new HelloWorldServlet("/helloworld/hs"),
                   initParams,
